@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>IoT802 — Final Exam Prep | EPU</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0a0a0a;color:#e0e0e0;font-family:'Courier New',monospace;min-height:100vh}
+  :root{--accent:#E8FF00;--bg:#0a0a0a;--card:#111111;--border:#1e1e1e}
+
+  /* HEADER */
+  .header{background:#0d0d0d;border-bottom:2px solid var(--accent);padding:16px 20px;position:sticky;top:0;z-index:10}
+  .header-title{color:var(--accent);font-weight:bold;font-size:14px;letter-spacing:3px}
+  .header-sub{font-size:11px;color:#555;margin-top:2px}
+  .quiz-stats{margin-top:8px;display:flex;gap:12px;font-size:11px}
+
+  /* TABS */
+  .tabbar{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);background:#0d0d0d;padding:0 4px}
+  .tabbar::-webkit-scrollbar{height:3px}.tabbar::-webkit-scrollbar-thumb{background:#333}
+  .tab-btn{padding:10px 14px;border:none;cursor:pointer;white-space:nowrap;font-size:11px;font-family:inherit;letter-spacing:1px;background:transparent;color:#555;border-bottom:2px solid transparent;transition:color .2s}
+  .tab-btn.active{color:var(--accent);border-bottom:2px solid var(--accent)}
+
+  /* CONTENT */
+  .content{padding:16px;max-width:680px;margin:0 auto}
+
+  /* CARDS */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:10px}
+  .card-accent{border-left:3px solid var(--accent)}
+  .card-dim{border-left:3px solid #333}
+
+  /* TOPIC */
+  .topic-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .topic-title{font-weight:bold;font-size:13px;color:#fff}
+  .topic-weight{font-size:10px}
+  .topic-desc{font-size:12px;color:#aaa;line-height:1.6}
+
+  /* CHEAT SHEET */
+  .cheat{background:#111;border:1px solid rgba(232,255,0,.18);border-radius:6px;padding:14px;margin-top:20px}
+  .cheat-title{color:var(--accent);font-size:11px;letter-spacing:2px;margin-bottom:10px}
+  .cheat-row{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid #1a1a1a;font-size:11px}
+  .cheat-key{color:var(--accent);min-width:130px;flex-shrink:0}
+  .cheat-val{color:#ccc}
+
+  /* QUIZ */
+  .q-cat{font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:8px}
+  .q-text{font-size:14px;color:#fff;line-height:1.7;margin-bottom:20px}
+  .opt{border-radius:6px;padding:12px 14px;margin-bottom:8px;cursor:pointer;font-size:13px;line-height:1.5;transition:all .15s;border:1px solid #333;background:#1a1a1a;color:#ccc}
+  .opt:hover{border-color:#555;background:#222}
+  .opt.correct{background:#0d2a0d!important;border-color:#4ade80!important;color:#4ade80!important}
+  .opt.wrong{background:#2a0d0d!important;border-color:#f87171!important;color:#f87171!important}
+  .opt.locked{cursor:default}
+  .opt-label{color:var(--accent);margin-right:8px}
+  .exp-box{background:#0a1a0a;border:1px solid #1e3a1e;border-radius:6px;padding:12px;margin-top:10px;font-size:12px;color:#90f090;line-height:1.7}
+  .exp-ans{color:var(--accent);font-weight:bold}
+  .exp-text{margin-top:6px;color:#aaa}
+  .quiz-btns{display:flex;gap:10px;margin-top:16px}
+  .btn-prev,.btn-next{flex:1;padding:12px;border-radius:6px;font-family:inherit;font-size:12px;cursor:pointer;border:none;transition:all .15s}
+  .btn-prev{background:#1a1a1a;border:1px solid #444;color:#aaa}
+  .btn-prev:disabled{background:#111;border-color:#222;color:#333;cursor:default}
+  .btn-next{background:var(--accent);color:#000;font-weight:bold}
+  .btn-next:disabled{background:#1a1a1a;color:#333;cursor:default}
+  .q-nav{margin-top:16px;display:flex;flex-wrap:wrap;gap:6px}
+  .q-nav-btn{width:32px;height:32px;border-radius:4px;border:1px solid #222;background:#111;color:#555;cursor:pointer;font-size:10px;font-family:inherit;transition:all .15s}
+  .q-nav-btn.current{border-color:var(--accent);background:rgba(232,255,0,.12);color:var(--accent)}
+  .toggle-btn{background:transparent;border:1px solid rgba(232,255,0,.25);color:var(--accent);padding:8px 16px;border-radius:4px;cursor:pointer;font-size:11px;font-family:inherit;margin-top:8px;margin-right:8px}
+
+  /* PRACTICALS */
+  .prac-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px}
+  .prac-title{color:var(--accent);font-weight:bold;font-size:13px;margin-bottom:8px}
+  .prac-problem{background:#0d0d0d;border-radius:4px;padding:10px;font-size:12px;color:#888;margin-bottom:14px;border-left:2px solid rgba(232,255,0,.25)}
+  .step{padding:8px 0;border-bottom:1px solid #1a1a1a}
+  .step:last-child{border-bottom:none}
+  .step-label{font-size:10px;color:#666;letter-spacing:1px;margin-bottom:2px}
+  .step-val{font-size:12px;font-family:monospace;white-space:pre-line;color:#ddd}
+  .step-val.highlight{color:var(--accent)}
+
+  /* BLANKS */
+  .blank-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:10px}
+  .blank-q{font-size:13px;color:#ddd;margin-bottom:10px;line-height:1.6}
+  .blank-ans{margin-top:10px;background:#0a1a0a;border-radius:4px;padding:10px 14px;font-size:13px;color:var(--accent);border-left:2px solid var(--accent);display:none}
+  .blank-ans.show{display:block}
+
+  /* SECTION LABEL */
+  .section-label{color:var(--accent);font-size:12px;letter-spacing:2px;margin-bottom:16px}
+
+  /* FOOTER */
+  .footer{text-align:center;padding:20px;color:#333;font-size:10px;border-top:1px solid #111;margin-top:20px}
+
+  /* TABS VISIBILITY */
+  .tab-content{display:none}.tab-content.active{display:block}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-title">IoT802 — FINAL EXAM PREP</div>
+  <div class="header-sub">EPU · 8th Semester · Prof. Dr. Shavan Askar</div>
+  <div class="quiz-stats" id="quizStats" style="display:none">
+    <span id="statQ" style="color:var(--accent)">Q 1/30</span>
+    <span id="statC" style="color:#4ade80">✓ 0</span>
+    <span id="statW" style="color:#f87171">✗ 0</span>
+    <span id="statL" style="color:#888">30 left</span>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tabbar">
+  <button class="tab-btn active" onclick="switchTab('topics',this)">📚 Key Topics</button>
+  <button class="tab-btn" onclick="switchTab('quiz',this)">❓ 30 MCQs</button>
+  <button class="tab-btn" onclick="switchTab('practicals',this)">🔢 Solved Examples</button>
+  <button class="tab-btn" onclick="switchTab('blanks',this)">✏️ Fill Blanks</button>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- TAB: TOPICS                             -->
+<!-- ════════════════════════════════════════ -->
+<div class="content tab-content active" id="tab-topics">
+  <div class="section-label">MOST IMPORTANT TOPICS — RANKED BY EXAM FREQUENCY</div>
+
+  <div id="topicsContainer"></div>
+
+  <div class="cheat">
+    <div class="cheat-title">⚡ QUICK RULES TO MEMORIZE</div>
+    <div id="cheatSheet"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- TAB: QUIZ                               -->
+<!-- ════════════════════════════════════════ -->
+<div class="content tab-content" id="tab-quiz">
+  <div class="card" style="border-radius:8px;padding:16px">
+    <div class="q-cat" id="qCat"></div>
+    <div class="q-text" id="qText"></div>
+    <div id="qOpts"></div>
+    <div id="qExpArea"></div>
+  </div>
+  <div class="quiz-btns">
+    <button class="btn-prev" id="btnPrev" onclick="prevQ()">← PREV</button>
+    <button class="btn-next" id="btnNext" onclick="nextQ()">NEXT →</button>
+  </div>
+  <div class="q-nav" id="qNav"></div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- TAB: PRACTICALS                         -->
+<!-- ════════════════════════════════════════ -->
+<div class="content tab-content" id="tab-practicals">
+  <div class="section-label">SOLVED PRACTICAL EXAMPLES — EXAM STYLE</div>
+  <div id="practicalsContainer"></div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- TAB: BLANKS                             -->
+<!-- ════════════════════════════════════════ -->
+<div class="content tab-content" id="tab-blanks">
+  <div class="section-label">FILL IN THE BLANKS — FROM REAL EXAMS</div>
+  <div id="blanksContainer"></div>
+</div>
+
+<div class="footer">IoT802 · EPU · Good Luck on Your Final Exam 🎯</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SCRIPT                                  -->
+<!-- ════════════════════════════════════════ -->
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const TOPICS = [
+  { icon:"🌐", title:"IPv6 EUI-64", weight:"⭐⭐⭐ ALWAYS IN EXAM", accent:true, desc:"Generate IPv6 from MAC: split MAC, insert FF:FE, flip 7th bit (U/L bit) of first byte." },
+  { icon:"📡", title:"Solicited-Node Multicast", weight:"⭐⭐⭐ ALWAYS IN EXAM", accent:true, desc:"ff02::1:ff + last 24 bits (6 hex digits) of the IPv6 address." },
+  { icon:"🔢", title:"IPv6 Subnetting", weight:"⭐⭐⭐ ALWAYS IN EXAM", accent:true, desc:"Nibble boundary (multiples of /4) and non-nibble boundary (exact bits needed). Know hierarchical subnetting." },
+  { icon:"⏱️", title:"Propagation Delay", weight:"⭐⭐⭐ ALWAYS IN EXAM", accent:true, desc:"Prop = Distance / Speed | Transmission = Packet_size / Bandwidth. These are different!" },
+  { icon:"📶", title:"LoRaWAN", weight:"⭐⭐⭐ HIGH FREQ", accent:false, desc:"Class A (uplink first), chirps (CSS modulation), 915MHz (NA), 868MHz (EU), OTAA/ABP activation." },
+  { icon:"🔗", title:"IEEE 802.15.4 / ZigBee", weight:"⭐⭐⭐ HIGH FREQ", accent:false, desc:"65,535 devices, 16 channels at 2.4GHz, 250kbps max at 2.4GHz, designed for mesh sensor networks." },
+  { icon:"📨", title:"ICMPv6 Types", weight:"⭐⭐ IMPORTANT", accent:false, desc:"133=RS (Router Solicitation), 134=RA (Router Advertisement), 135=NS (Neighbor Solicitation), 136=NA." },
+  { icon:"🏗️", title:"6PE vs 6VPE", weight:"⭐⭐ IMPORTANT", accent:false, desc:"6PE=single IPv6 routing table on PE router. 6VPE=multiple IPv6 VRFs per PE. Both use MPLS backbone." },
+  { icon:"🌉", title:"6in4 / IPv6 Transition", weight:"⭐⭐ IMPORTANT", accent:false, desc:"6in4 uses Protocol ID 41, encapsulates IPv6 in IPv4. 6PE uses IS-IS/OSPF + BGP for routing." },
+  { icon:"📡", title:"ADSL vs HFC", weight:"⭐⭐ IMPORTANT", accent:false, desc:"ADSL=dedicated point-to-point connection. HFC=shared broadcast medium. DSLAM is at the central office." },
+  { icon:"🏭", title:"IoT / Industry 4.0", weight:"⭐⭐ IMPORTANT", accent:false, desc:"RTLS, Connected Cow, Smart Buildings, IIoT vs IoT. Actuator=changes environment. Sensor=reads environment." },
+  { icon:"📡", title:"SLAAC + NDP", weight:"⭐⭐ IMPORTANT", accent:false, desc:"SLAAC uses RA (ICMPv6 type 134) to get prefix. EUI-64 creates host part. No DHCPv6 server needed." },
+];
+
+const CHEAT = [
+  ["EUI-64 rule","Split MAC at middle | Insert FF:FE | Flip bit 7 of byte 1"],
+  ["Solicited-node","ff02::1:ff + last 24 bits (6 hex digits)"],
+  ["ICMPv6","RS=133  RA=134  NS=135  NA=136"],
+  ["LoRaWAN NA freq","915 MHz  |  EU = 868 MHz  |  Class A = uplink first"],
+  ["802.15.4 devices","Max 65,535 | 16 channels @ 2.4GHz | Max rate 250 kbps"],
+  ["802.11ah (HaLow)","Sub-1GHz | supports 8000+ stations | IoT focused"],
+  ["Prop delay formula","= Distance ÷ Speed  (nothing to do with packet size)"],
+  ["Transmission delay","= Packet_bits ÷ Bandwidth_bps"],
+  ["DSLAM location","At the central office (CO) — NOT customer's home"],
+  ["HFC vs ADSL","HFC = shared broadcast | ADSL = dedicated per user"],
+  ["6in4 Protocol ID","Protocol 41 encapsulates IPv6 inside IPv4"],
+  ["6VPE vs 6PE","6VPE = multiple VRFs per PE | 6PE = single IPv6 table"],
+  ["Actuator","Changes / acts on the environment (output device)"],
+  ["BACnet","De facto standard protocol for building automation"],
+  ["RTLS","Uses Wi-Fi / UWB / BLE / RFID for real-time indoor location"],
+  ["IIoT vs IoT","IIoT adds data analytics + business insights on top of IoT"],
+  ["ff02::1","All IPv6 nodes — link-local, NOT forwarded by routers"],
+  ["Nibble boundary","/48 → /52 → /56 → /60 → /64 (4 bits = 1 nibble each step)"],
+  ["Non-nibble bits","Need N subnets → bits = ⌈log₂(N)⌉ → new prefix = old + bits"],
+  ["OTAA vs ABP","OTAA = over-the-air join request | ABP = pre-provisioned keys"],
+];
+
+const QUESTIONS = [
+  { cat:"IPv6 EUI-64", q:"Network prefix: 2001:DB8:AC10:FE01::/64. MAC: 00:1A:2B:3C:4D:5E. What is the IPv6 address?",
+    opts:["2001:DB8:AC10:FE01:021A:2BFF:FE3C:4D5E","2001:DB8:AC10:FE01:001A:2BFF:FE3C:4D5E","2001:DB8:AC10:FE01:021A:2BFE:FF3C:4D5E","2001:DB8:AC10:FE01:021A:2BFF:FE3C:5E4D"],
+    ans:0, exp:"Split: 00:1A:2B | 3C:4D:5E → Insert FF:FE → 00:1A:2B:FF:FE:3C:4D:5E → Flip bit7 of 0x00: 0000 0000 → 0000 0010 = 0x02 → EUI-64: 021A:2BFF:FE3C:4D5E", ca:"A — 2001:DB8:AC10:FE01:021A:2BFF:FE3C:4D5E"},
+  { cat:"IPv6 EUI-64", q:"Which bit is flipped in the first byte of the MAC address during EUI-64 generation?",
+    opts:["The 1st bit (MSB)","The 7th bit (Universal/Local bit)","The 8th bit (LSB)","The 4th bit"],
+    ans:1, exp:"The 7th bit (U/L bit) is flipped. 0x00=0000 0000 → 0000 0010=0x02. 0xD4=1101 0100 → 1101 0110=0xD6. This converts from locally to universally administered (or vice versa).", ca:"B — The 7th bit (U/L bit)"},
+  { cat:"IPv6 EUI-64", q:"MAC: D4:63:A9:10:2F:33, Network: 2C08:47c2:7001::/40. EUI-64 IPv6 address?",
+    opts:["2C08:47c2:7001::D663:A9FF:FE10:2F33","2C08:47c2:7001::D463:A9FF:FE10:2F33","2C08:47c2:7001::D663:A9FE:FF10:2F33","2C08:47c2:7001::D4:63:A9:10:2F:33"],
+    ans:0, exp:"D4=1101 0100 → flip bit7 → 1101 0110=D6. Insert FF:FE after D6:63:A9 → D6:63:A9:FF:FE:10:2F:33 → D663:A9FF:FE10:2F33", ca:"A — 2C08:47c2:7001::D663:A9FF:FE10:2F33"},
+  { cat:"IPv6 EUI-64", q:"MAC: 44:38:39:FF:EF:57. What is the correct EUI-64 interface identifier?",
+    opts:["4638:39FF:FEFF:EF57","4438:39FF:FEEF:5700","4438:39FF:FEFF:EF57","4238:39FF:FEFF:EF57"],
+    ans:0, exp:"0x44=0100 0100 → flip bit7 → 0100 0110=0x46. Split: 44:38:39 | FF:EF:57 → Insert FF:FE → 46:38:39:FF:FE:FF:EF:57 → 4638:39FF:FEFF:EF57", ca:"A — 4638:39FF:FEFF:EF57"},
+  { cat:"Solicited-Node Multicast", q:"IPv6 address: 2001:db8:1234:5678:90ab:cde0. What is the solicited-node multicast address?",
+    opts:["ff02::1:ffab:cdef","ff02::1:ffab:cde0","ff02::1:ff90:abcd","ff02::1:ff00:cde0"],
+    ans:1, exp:"Take the last 24 bits = last 6 hex digits of the address: ab:cde0. Prepend ff02::1:ff → ff02::1:ffab:cde0", ca:"B — ff02::1:ffab:cde0"},
+  { cat:"Solicited-Node Multicast", q:"Google's IPv6: 2001:4860:4860::8888. Its solicited-node multicast address?",
+    opts:["ff02::1:ff60:8888","ff02::1:ff00:8888","ff02::1:ff48:6088","ff02::1:ff86:0488"],
+    ans:1, exp:"Last 24 bits of ::8888 → last 3 bytes: 0x00, 0x88, 0x88 → ff02::1:ff00:8888", ca:"B — ff02::1:ff00:8888"},
+  { cat:"ICMPv6 Types", q:"Which ICMPv6 type number is Router Advertisement (RA)?",
+    opts:["133","134","135","136"],
+    ans:1, exp:"133=Router Solicitation (RS) — host asks for config. 134=Router Advertisement (RA) — router responds with prefix. 135=Neighbor Solicitation (NS). 136=Neighbor Advertisement (NA).", ca:"B — 134"},
+  { cat:"ICMPv6 Types", q:"A host wants to resolve a neighbor's MAC address. Which ICMPv6 message does it send?",
+    opts:["Type 133 — Router Solicitation","Type 134 — Router Advertisement","Type 135 — Neighbor Solicitation","Type 136 — Neighbor Advertisement"],
+    ans:2, exp:"Neighbor Solicitation (NS, type 135) is the IPv6 equivalent of ARP Request. It's sent to the solicited-node multicast address of the target.", ca:"C — Type 135 (Neighbor Solicitation)"},
+  { cat:"SLAAC / NDP", q:"Which statement about SLAAC is TRUE?",
+    opts:["SLAAC requires a DHCPv6 server","EUI-64 method creates the 64-bit host portion of the IPv6 address","SLAAC assigns a /32 subnet mask by default","RA message only provides the default gateway"],
+    ans:1, exp:"SLAAC = Stateless Address Auto-Configuration. Uses Router Advertisement (RA) to get the /64 prefix, then EUI-64 to generate the host portion. No DHCPv6 server required.", ca:"B — EUI-64 creates the host portion"},
+  { cat:"Propagation Delay", q:"Link: 20 km, propagation speed: 2.25×10⁸ m/s. What is the propagation delay?",
+    opts:["0.001 sec","0.000089 sec","0.001024 sec","0.005 sec"],
+    ans:1, exp:"Propagation delay = Distance / Speed = 20,000 m ÷ 2.25×10⁸ m/s = 0.0000888... ≈ 0.000089 sec. This is independent of packet size or bandwidth.", ca:"B — 0.000089 sec"},
+  { cat:"Propagation Delay", q:"Packet: 1 KB, Link bandwidth: 10 Mbps. What is the TRANSMISSION delay?",
+    opts:["0.000819 sec","0.0008192 sec","0.001 sec","0.0000008 sec"],
+    ans:1, exp:"Transmission delay = Packet_size / Bandwidth = (1024 × 8 bits) ÷ (10 × 10⁶ bps) = 8192 ÷ 10,000,000 = 0.0008192 sec ≈ 0.82 ms", ca:"B — 0.0008192 sec"},
+  { cat:"LoRaWAN", q:"How do LoRaWAN Class A devices initiate communication?",
+    opts:["Polling the server periodically","Sending periodic pings","Sending an uplink message first, then two RX windows open","Scanning for downlink continuously"],
+    ans:2, exp:"Class A (most energy-efficient): device sends uplink → two short RX windows open. Class B adds scheduled RX slots via beacons. Class C is always listening (most power-hungry).", ca:"C — Sending an uplink message first"},
+  { cat:"LoRaWAN", q:"Which technology uses 'chirps' (frequency-sweeping signals) for encoding information?",
+    opts:["Wi-Fi","ZigBee","LoRa","BLE"],
+    ans:2, exp:"LoRa (Long Range) uses Chirp Spread Spectrum (CSS) modulation. Data is encoded as up-chirps and down-chirps, giving excellent resistance to interference and long range.", ca:"C — LoRa"},
+  { cat:"LoRaWAN", q:"What frequency does LoRaWAN use in North America?",
+    opts:["433 MHz","868 MHz","915 MHz","2.4 GHz"],
+    ans:2, exp:"North America ISM band = 915 MHz. Europe = 868 MHz. Asia Pacific = 433 MHz or 923 MHz. Sub-GHz frequencies give much longer range than 2.4 GHz.", ca:"C — 915 MHz"},
+  { cat:"LoRaWAN", q:"What method does LoRaWAN use to join a network securely?",
+    opts:["Username and password","Preshared keys only","Over-the-Air Activation (OTAA) or Activation by Personalization (ABP)","Manual MAC address registration"],
+    ans:2, exp:"OTAA: device sends Join-Request, server verifies AppEUI/DevEUI/AppKey and issues session keys dynamically. ABP: session keys (NwkSKey, AppSKey) pre-programmed — no join procedure.", ca:"C — OTAA or ABP"},
+  { cat:"IEEE 802.15.4", q:"How many devices can IEEE 802.15.4 theoretically support in a network?",
+    opts:["16","128","256","65,535"],
+    ans:3, exp:"IEEE 802.15.4 uses 16-bit short addresses → 2^16 - 1 = 65,535 devices. Designed for large-scale wireless sensor networks (ZigBee, Thread, 6LoWPAN all built on it).", ca:"D — 65,535"},
+  { cat:"IEEE 802.15.4", q:"How many channels does IEEE 802.15.4 define in the 2.4 GHz band?",
+    opts:["11","14","16","20"],
+    ans:2, exp:"16 channels in 2.4 GHz (channels 11–26, worldwide). Also: 10 channels in 915 MHz (North America) and 1 channel in 868 MHz (Europe).", ca:"C — 16"},
+  { cat:"IEEE 802.15.4", q:"What is the typical maximum data rate of IEEE 802.15.4 at 2.4 GHz?",
+    opts:["1 Mbps","100 kbps","250 kbps","10 Mbps"],
+    ans:2, exp:"250 kbps at 2.4 GHz (O-QPSK). 40 kbps at 915 MHz. 20 kbps at 868 MHz. Much lower than Wi-Fi — designed for low-power, low-data IoT sensors.", ca:"C — 250 kbps"},
+  { cat:"IEEE 802.11ah", q:"IEEE 802.11ah is also known as:",
+    opts:["LoRa","Wi-Fi HaLow","Wi-SUN","ZigWave"],
+    ans:1, exp:"IEEE 802.11ah = Wi-Fi HaLow. Operates below 1 GHz, longer range and better wall penetration than standard Wi-Fi. Supports over 8000 stations per AP. Ideal for IoT.", ca:"B — Wi-Fi HaLow"},
+  { cat:"IEEE 1901.2a", q:"Which technology is most commonly used for smart grid applications (power line communication)?",
+    opts:["ZigBee","Wi-Fi","IEEE 1901.2a","Bluetooth"],
+    ans:2, exp:"IEEE 1901.2a = narrowband powerline communication standard for smart grid. Uses capacitive coupling. IEEE 802.15.4g (Wi-SUN) also used but 1901.2a is the primary PLC standard.", ca:"C — IEEE 1901.2a"},
+  { cat:"ADSL vs HFC", q:"Where is the DSLAM typically located in an ADSL network?",
+    opts:["At the customer's home","At the central office","At the cable headend","At the satellite dish"],
+    ans:1, exp:"DSLAM (Digital Subscriber Line Access Multiplexer) sits at the telephone company's central office (CO). It aggregates DSL lines from many customers and connects them to the ISP backbone.", ca:"B — At the central office"},
+  { cat:"ADSL vs HFC", q:"What is the fundamental difference between ADSL and HFC access networks?",
+    opts:["ADSL is always faster than HFC","HFC is a dedicated point-to-point network","HFC is a shared broadcast network; ADSL is a dedicated connection per user","ADSL only supports mobile access"],
+    ans:2, exp:"HFC (Hybrid Fiber-Coaxial) is a shared broadcast medium — neighbors share bandwidth. ADSL gives each subscriber their own dedicated twisted-pair copper to the central office.", ca:"C — HFC shared broadcast, ADSL dedicated"},
+  { cat:"ADSL vs HFC", q:"A router receives a packet destined for ff02::1. What will the router do?",
+    opts:["Forward it to all interfaces","Forward it to IPv6-enabled interfaces only","Drop it — link-local multicast scope, not forwarded","Forward it to all routers"],
+    ans:2, exp:"ff02::1 = All IPv6 nodes, link-local scope (scope=2). Routers do NOT forward link-local multicast across interfaces. The packet is dropped at the router boundary.", ca:"C — Drop it (link-local scope, not forwarded)"},
+  { cat:"IPv6 Deployment", q:"What is a key difference between 6PE and 6VPE?",
+    opts:["6PE supports dual-stack core; 6VPE does not","6VPE supports multiple IPv6 VRFs per PE router; 6PE does not","6PE uses IS-IS protocol; 6VPE uses OSPF","6VPE is not compatible with MPLS"],
+    ans:1, exp:"6PE = one shared IPv6 routing table on the PE (no VRF isolation). 6VPE = multiple IPv6 VRFs per PE router, enabling IPv6 L3 VPN service. Both run over an MPLS core.", ca:"B — 6VPE supports multiple IPv6 VRFs"},
+  { cat:"IPv6 Deployment", q:"Which IPv6 deployment scenario uses Protocol ID 41 to encapsulate IPv6 packets in IPv4?",
+    opts:["Dual Stack","6VPE","6PE","6in4"],
+    ans:3, exp:"6in4 (RFC 4213) uses IPv4 protocol number 41 to carry IPv6 as payload. The IPv4 header wraps the IPv6 packet. Also called 'configured tunneling'. Simple but requires manual config.", ca:"D — 6in4"},
+  { cat:"IPv6 Deployment", q:"IPv4 address 192.168.1.1 embedded in IPv6 (::IPv4 format, last 32 bits). Result?",
+    opts:["2001:0db8::c0a8:0101","::c0a8:0101","fe80::c0a8:0101","2001:0db8::192.168.1.1"],
+    ans:1, exp:"192=0xC0, 168=0xA8, 1=0x01, 1=0x01 → c0a8:0101. IPv4-compatible format: ::c0a8:0101. Note: IPv4-mapped uses ::ffff:c0a8:0101 (with ffff prefix).", ca:"B — ::c0a8:0101"},
+  { cat:"IoT Concepts", q:"What is the function of an actuator in an IoT system?",
+    opts:["To collect data from the physical environment","To store and process data in the cloud","To effect a change in the physical environment","To provide a user interface for the system"],
+    ans:2, exp:"Actuator = OUTPUT device that ACTS on the environment (motor, valve, relay, speaker, LED). Sensor = INPUT that READS/MEASURES the environment. Both are fundamental IoT hardware components.", ca:"C — To effect a change in the environment"},
+  { cat:"IoT Concepts", q:"What key benefit does the Nest thermostat example illustrate about IoT?",
+    opts:["It was the first internet-connected device ever created","It connects previously separate devices to work together for a holistic home experience","It completely eliminates the need for human interaction","It is a cheaper alternative to home security"],
+    ans:1, exp:"Nest illustrates IoT integration: thermostat + smoke detector + security camera + app all work together, share data, learn patterns, and create unified home automation — isolated devices now collaborate.", ca:"B — Connects separate devices for holistic experience"},
+  { cat:"IoT Concepts", q:"RTLS (Real-Time Location System) in Industry 4.0 primarily uses which technologies?",
+    opts:["Only GPS satellites","Wi-Fi, UWB, BLE, or RFID positioning technologies","Only cellular networks (4G/5G)","Only wired Ethernet beacons"],
+    ans:1, exp:"RTLS uses indoor positioning technologies: Wi-Fi (RSS-based), UWB (Ultra-Wideband, most accurate), BLE beacons, or RFID. GPS doesn't work well indoors. Used for asset/worker tracking in factories.", ca:"B — Wi-Fi, UWB, BLE, or RFID"},
+  { cat:"IPv6 Subnetting", q:"A primary advantage of subnetting IPv6 using nibble boundaries is:",
+    opts:["It allows more devices per subnet","It avoids the need for CIDR notation","It improves prefix legibility and reduces configuration errors","It shortens the total address length"],
+    ans:2, exp:"Nibble boundaries (/4 multiples like /52, /56, /60, /64) align subnet prefixes with hex digit boundaries, making addresses immediately human-readable and reducing admin mistakes.", ca:"C — Improves prefix legibility"},
+  { cat:"IPv6 Subnetting", q:"Given 2001:db8:1::/48, which is the 5th /64 subnet in the 3rd /60 of the 2nd /52?",
+    opts:["2001:db8:1:1210::/64","2001:db8:1:2010::/64","2001:db8:1:1020::/64","None of the above — correct answer is 2001:db8:1:1024::/64"],
+    ans:3, exp:"2nd /52 (index 1): N1=1 → 2001:db8:1:1000::/52. 3rd /60 (index 2): N2=0,N3=2 → 2001:db8:1:1020::/60. 5th /64 (index 4): N4=4 → 2001:db8:1:1024::/64. Not in choices a-c!", ca:"D — 2001:db8:1:1024::/64 (Answer E in original)"},
+];
+
+const PRACTICALS = [
+  { title:"EUI-64: Step-by-Step (Most Common Exam Question)", problem:"Network: 2001:DB8:AC10:FE01::/64  |  MAC: 00:1A:2B:3C:4D:5E",
+    steps:[
+      {label:"Step 1 — Split MAC address in half at the middle",val:"00:1A:2B  ——  3C:4D:5E"},
+      {label:"Step 2 — Insert FF:FE between the two halves",val:"00:1A:2B:FF:FE:3C:4D:5E"},
+      {label:"Step 3 — Flip the 7th bit (U/L bit) of the first byte",val:"0x00 = 0000 0000\n         ↓ flip bit 7\n0x02 = 0000 0010"},
+      {label:"Step 4 — Rewrite as EUI-64 (the 64-bit interface ID)",val:"02:1A:2B:FF:FE:3C:4D:5E  →  021A:2BFF:FE3C:4D5E"},
+      {label:"✅ Final IPv6 Address",val:"2001:DB8:AC10:FE01:021A:2BFF:FE3C:4D5E", highlight:true},
+    ]},
+  { title:"Propagation & Transmission Delay (MidTerm 2025-2026 Q6)", problem:"Link: 20 km  |  Speed: 2.25×10⁸ m/s  |  Packet: 0.25 KB  |  Bandwidth: 2 Mbps",
+    steps:[
+      {label:"Propagation Delay = Distance ÷ Speed",val:"= 20,000 m ÷ 2.25×10⁸ m/s"},
+      {label:"✅ Propagation Delay",val:"= 0.0000889 sec ≈ 0.000089 sec  → Answer B", highlight:true},
+      {label:"Transmission Delay = Packet_bits ÷ Bandwidth",val:"= (0.25 × 1024 × 8) ÷ (2 × 10⁶)\n= 2048 ÷ 2,000,000"},
+      {label:"✅ Transmission Delay",val:"= 0.001024 sec  → Answer C (if asked)", highlight:true},
+    ]},
+  { title:"Solicited-Node Multicast Address", problem:"Given IPv6: 2001:db8:1234:5678:90ab:cde0",
+    steps:[
+      {label:"Rule",val:"ff02::1:ff  +  last 24 bits (= last 6 hex digits) of the IPv6 address"},
+      {label:"Identify last 24 bits (6 hex chars)",val:"...90ab:cde0  →  last 6 hex = ab:cde0"},
+      {label:"✅ Solicited-node multicast address",val:"ff02::1:ffab:cde0", highlight:true},
+    ]},
+  { title:"Nibble Subnetting: 2a04:ff01:4000::/48 → 8 Cities, 20 Routers Each", problem:"Nibble boundary approach. Find: last router in city 1, and last router in city 5.",
+    steps:[
+      {label:"Cities: need 8 subnets → how many bits?",val:"2³=8 ≥ 8 → 3 bits needed, but nibble boundary → round to 4 bits → /52"},
+      {label:"City subnets (/52) — first nibble of group 4 changes",val:"City 1: 2a04:ff01:4000:0000::/52\nCity 2: 2a04:ff01:4000:1000::/52\nCity 5: 2a04:ff01:4000:4000::/52\nCity 8: 2a04:ff01:4000:7000::/52"},
+      {label:"Routers: 20 per city — from /52, next nibble boundary",val:"/52→/56 gives 16 subnets (NOT enough for 20)\n/52→/60 gives 256 subnets ✓"},
+      {label:"Router /60 subnets within a city (N3 nibble increments)",val:"Router 1:  ...0000::/60  (N3=0)\nRouter 2:  ...0010::/60  (N3=1)\nRouter 10: ...0090::/60  (N3=9)\nRouter 17: ...0100::/60  (N3=16)\nRouter 20: ...0130::/60  (N3=19=0x13)"},
+      {label:"✅ 20th router in City 1",val:"2a04:ff01:4000:0130::/60", highlight:true},
+      {label:"✅ 20th router in City 5",val:"2a04:ff01:4000:4130::/60", highlight:true},
+    ]},
+  { title:"Non-Nibble Subnetting: 2001:0ac9:daaf::/48 → 6 Subnets", problem:"Divide into 6 subnets using non-nibble (exact bit) boundary.",
+    steps:[
+      {label:"Bits needed for 6 subnets",val:"2² = 4 < 6   →  2³ = 8 ≥ 6  →  need 3 bits\nNew prefix = /48 + 3 = /51"},
+      {label:"How subnets are allocated (bits 49-51 vary)",val:"Subnet 1: 000|xxxxx → group4 = 0x0000 → 2001:0ac9:daaf:0000::/51\nSubnet 2: 001|xxxxx → group4 = 0x2000 → 2001:0ac9:daaf:2000::/51\nSubnet 3: 010|xxxxx → group4 = 0x4000 → 2001:0ac9:daaf:4000::/51\nSubnet 4: 011|xxxxx → group4 = 0x6000 → 2001:0ac9:daaf:6000::/51\nSubnet 5: 100|xxxxx → group4 = 0x8000 → 2001:0ac9:daaf:8000::/51\nSubnet 6: 101|xxxxx → group4 = 0xA000 → 2001:0ac9:daaf:A000::/51"},
+      {label:"✅ 3rd subnet",val:"2001:0ac9:daaf:4000::/51", highlight:true},
+      {label:"✅ Range of 3rd subnet",val:"2001:0ac9:daaf:4000:: → 2001:0ac9:daaf:5FFF:FFFF:FFFF:FFFF:FFFF", highlight:true},
+    ]},
+  { title:"Hierarchical Subnetting (MidTerm 2025-2026 Q12)", problem:"Start: 2001:db8:1::/48  |  16 /52s → 256 /60s → 4096 /64s\nFind: 5th /64 in 3rd /60 of 2nd /52",
+    steps:[
+      {label:"2nd /52  (index 1, 0-based)",val:"bits 49-52 = 0001 → N1 of group 4 = 1\n→ 2001:db8:1:1000::/52"},
+      {label:"3rd /60 within 2nd /52  (index 2, 0-based)",val:"bits 53-60 = 0000 0010 → N2=0, N3=2\n→ 2001:db8:1:1020::/60"},
+      {label:"5th /64 within 3rd /60  (index 4, 0-based)",val:"bits 61-64 = 0100 → N4=4\n→ 2001:db8:1:1024::/64"},
+      {label:"✅ Final Answer",val:"2001:db8:1:1024::/64\n(Choices a–d don't list this → Answer = E) None of them)", highlight:true},
+    ]},
+  { title:"Final 2024-2025: Non-Nibble Hierarchical (2A1B:EF59:BB31::/48)", problem:"70 buildings, 40 departments each. Non-nibble boundary. Find: address of building 60, 20th dept, and 101st address in dept.",
+    steps:[
+      {label:"Buildings: bits needed for 70",val:"2⁶=64 < 70  →  2⁷=128 ≥ 70  →  7 bits\nBuilding prefix = /48 + 7 = /55"},
+      {label:"Departments: bits needed for 40",val:"2⁵=32 < 40  →  2⁶=64 ≥ 40  →  6 bits\nDept prefix = /55 + 6 = /61"},
+      {label:"60th building  (index 59 = 011 1011 in 7 bits)",val:"bits 49-52 (N1): 0111 = 7\nbits 53-56 (N2): 011|0 = 0110 = 6  (bit56=0 for network)\nbits 57-60 (N3): 0000 = 0\nbits 61-64 (N4): 0000 = 0\nGroup 4 = 7600"},
+      {label:"✅ Building 60 address",val:"2A1B:EF59:BB31:7600::/55", highlight:true},
+      {label:"20th department  (index 19 = 01 0011 in 6 bits)",val:"bit56=0, bit57=1, bit58=0, bit59=0, bit60=1, bit61=1\nN2 stays: 011|0 = 6  (bit56=0)\nN3 (bits 57-60): 1001 = 9\nN4 (bits 61-64): 1000 = 8  (bit61=1, rest=0)\nGroup 4 = 7698"},
+      {label:"✅ 20th Department address",val:"2A1B:EF59:BB31:7698::/61", highlight:true},
+      {label:"101st IPv6 address (network = 1st address)",val:"Network + 100 = 2A1B:EF59:BB31:7698:: + 0x64"},
+      {label:"✅ 101st address",val:"2A1B:EF59:BB31:7698::64", highlight:true},
+    ]},
+];
+
+const BLANKS = [
+  {q:"RTLS uses _____________ technology (for locating assets/workers in factories)", a:"Wi-Fi / UWB / BLE / RFID (indoor positioning)"},
+  {q:"IoT focuses on connecting 'things' to a network, while _____________ encompasses connection of 'things' with the data they generate and business insights.", a:"IIoT (Industrial Internet of Things)"},
+  {q:"In Industry 4.0, the goal is for machines to predict failures and _____________, pointing to a world where human intervention is no longer necessary.", a:"self-optimize / self-correct / autonomous action"},
+  {q:"The de facto communication protocol responsible for building automation is known as _____________", a:"BACnet (Building Automation and Control Networks)"},
+  {q:"The _____________ of the roach are sensory organs on the abdomen that detect danger through changing air currents.", a:"cerci"},
+  {q:"The last /64 subnet inside 2001:db8:1000::/60 is _____________", a:"2001:db8:1000:F::/64  (the 16th /64, 4th nibble = F)"},
+  {q:"Which protocol is widely used for building automation systems? _____________", a:"BACnet"},
+  {q:"IoT devices are equipped with embedded _____________, _____________ processors, and transceivers to enable intelligence and connectivity.", a:"microcontrollers, signal (processing)"},
+  {q:"The communication between IoT devices is mainly _____________ because they are generally installed at geographically dispersed locations.", a:"wireless"},
+  {q:"_____________ is a concept where vehicles exchange real-time data with infrastructure to enhance road safety and reduce congestion.", a:"V2X / Connected Roadways / Vehicle-to-Infrastructure (V2I)"},
+  {q:"IEEE 802.11ah is also known as _____________ and supports over _____________ stations.", a:"Wi-Fi HaLow | 8000 stations"},
+  {q:"LoRaWAN Class __ devices are the most power-efficient, initiating all communication with an uplink first.", a:"Class A"},
+];
+
+// ─── STATE ──────────────────────────────────────────────────────────────────
+let currentTab = 'topics';
+let qi = 0, selected = null, score = 0, answered = 0;
+
+// ─── TAB SWITCHING ──────────────────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  currentTab = name;
+  document.getElementById('quizStats').style.display = name === 'quiz' ? 'flex' : 'none';
+}
+
+// ─── RENDER TOPICS ──────────────────────────────────────────────────────────
+function renderTopics() {
+  const c = document.getElementById('topicsContainer');
+  c.innerHTML = TOPICS.map(t => `
+    <div class="card ${t.accent ? 'card-accent' : 'card-dim'}">
+      <div class="topic-header">
+        <span class="topic-title">${t.icon} ${t.title}</span>
+        <span class="topic-weight" style="color:${t.accent ? 'var(--accent)' : '#666'}">${t.weight}</span>
+      </div>
+      <div class="topic-desc">${t.desc}</div>
+    </div>
+  `).join('');
+
+  const cs = document.getElementById('cheatSheet');
+  cs.innerHTML = CHEAT.map(([k,v]) => `
+    <div class="cheat-row">
+      <span class="cheat-key">${k}</span>
+      <span class="cheat-val">${v}</span>
+    </div>
+  `).join('');
+}
+
+// ─── RENDER QUIZ ────────────────────────────────────────────────────────────
+function renderQuiz() {
+  const q = QUESTIONS[qi];
+  document.getElementById('qCat').textContent = q.cat.toUpperCase() + ' · Q' + (qi+1) + ' OF ' + QUESTIONS.length;
+  document.getElementById('qText').textContent = q.q;
+
+  const labels = ['A','B','C','D'];
+  document.getElementById('qOpts').innerHTML = q.opts.map((opt,i) => `
+    <div class="opt ${selected!==null?'locked':''} ${selected!==null&&i===q.ans?'correct':''} ${selected!==null&&i===selected&&selected!==q.ans?'wrong':''}"
+         onclick="handleAnswer(${i})">
+      <span class="opt-label">${labels[i]})</span>${opt}
+    </div>
+  `).join('');
+
+  document.getElementById('qExpArea').innerHTML = selected !== null ? `
+    <button class="toggle-btn" onclick="toggleExp()">Show Explanation</button>
+    <div id="expBox" class="exp-box" style="display:none">
+      <div class="exp-ans">✅ ${q.ca}</div>
+      <div class="exp-text">${q.exp}</div>
+    </div>
+  ` : '';
+
+  document.getElementById('btnPrev').disabled = qi === 0;
+  document.getElementById('btnNext').disabled = qi === QUESTIONS.length - 1;
+
+  // nav dots
+  document.getElementById('qNav').innerHTML = QUESTIONS.map((_,i) => `
+    <button class="q-nav-btn ${i===qi?'current':''}" onclick="goQ(${i})">${i+1}</button>
+  `).join('');
+
+  // stats
+  document.getElementById('statQ').textContent = 'Q '+(qi+1)+'/'+QUESTIONS.length;
+  document.getElementById('statC').textContent = '✓ '+score;
+  document.getElementById('statW').textContent = '✗ '+(answered-score);
+  document.getElementById('statL').textContent = (QUESTIONS.length-answered)+' left';
+}
+
+function toggleExp() {
+  const box = document.getElementById('expBox');
+  const btn = box.previousElementSibling;
+  if(box.style.display==='none'){box.style.display='block';btn.textContent='Hide Explanation';}
+  else{box.style.display='none';btn.textContent='Show Explanation';}
+}
+
+function handleAnswer(i) {
+  if(selected!==null) return;
+  selected = i;
+  answered++;
+  if(i===QUESTIONS[qi].ans) score++;
+  renderQuiz();
+}
+function nextQ(){ if(qi<QUESTIONS.length-1){qi++;selected=null;renderQuiz();} }
+function prevQ(){ if(qi>0){qi--;selected=null;renderQuiz();} }
+function goQ(i){ qi=i;selected=null;renderQuiz(); }
+
+// ─── RENDER PRACTICALS ──────────────────────────────────────────────────────
+function renderPracticals() {
+  document.getElementById('practicalsContainer').innerHTML = PRACTICALS.map(p => `
+    <div class="prac-card">
+      <div class="prac-title">📝 ${p.title}</div>
+      <div class="prac-problem">${p.problem}</div>
+      ${p.steps.map(s => `
+        <div class="step">
+          <div class="step-label">${s.label}</div>
+          <div class="step-val ${s.highlight?'highlight':''}">${s.val}</div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+// ─── RENDER BLANKS ──────────────────────────────────────────────────────────
+function renderBlanks() {
+  document.getElementById('blanksContainer').innerHTML = BLANKS.map((b,i) => `
+    <div class="blank-card">
+      <div class="blank-q">${i+1}. ${b.q}</div>
+      <button class="toggle-btn" onclick="toggleBlank(${i})">Reveal Answer</button>
+      <div class="blank-ans" id="blank-${i}">→ ${b.a}</div>
+    </div>
+  `).join('');
+}
+
+function toggleBlank(i) {
+  const el = document.getElementById('blank-'+i);
+  const btn = el.previousElementSibling;
+  const showing = el.classList.contains('show');
+  el.classList.toggle('show');
+  btn.textContent = showing ? 'Reveal Answer' : 'Hide Answer';
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+renderTopics();
+renderQuiz();
+renderPracticals();
+renderBlanks();
+</script>
+</body>
+</html>
